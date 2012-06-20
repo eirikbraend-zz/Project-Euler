@@ -1,4 +1,4 @@
 # Project Euler Solutions
 
-http://projecteuler.net/problems
+http://projecteuler.net
 
