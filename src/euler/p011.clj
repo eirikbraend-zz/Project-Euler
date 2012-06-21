@@ -4,7 +4,7 @@
 ; The product of these numbers is 26  63  78  14 = 1788696.
 ; What is the greatest product of four adjacent numbers in any direction (up, down, left, right, or diagonally) in the 2020 grid?
 
-(def data [
+(def input [
            [8  2 22 97 38 15  0 40  0 75  4  5  7 78 52 12 50 77 91  8]
            [49 49 99 40 17 81 18 57 60 87 17 40 98 43 69 48  4 56 62  0]
            [81 49 31 73 55 79 14 29 93 71 40 67 53 88 30  3 49 13 36 65]
@@ -30,16 +30,18 @@
 (defn calc-line [line]
   (map #(apply * %) (partition 4 1 line)))
 
-(defn find-max [input]
-  (apply max (mapcat calc-line input)))
+(defn find-max [table]
+  (mapcat calc-line table))
 
-(def columns (partition 20 (apply interleave data)))
-(def dia1 (map-indexed #(concat (repeat %1 0) %2) data))
-(def dia2 (map-indexed #(concat (repeat (- 19 %1) 0) %2) data))
+(defn switch [table]
+  (partition 20 (apply interleave table)))
 
-(def dia1d (partition 20 (apply interleave dia1)))
-(def dia2d (partition 20 (apply interleave dia2)))
+(defn dia1 [table]
+  (switch (map-indexed #(concat (repeat (- 19 %1) 0) %2) table)))
 
-(max (find-max data) (find-max columns) (find-max dia1d) (find-max dia2d))
+(defn dia2 [table]
+  (switch (map-indexed #(concat (repeat %1 0) %2) table)))
+
+(apply max (mapcat find-max ((juxt identity switch dia1 dia2) input)))
 
 ; 70600674
