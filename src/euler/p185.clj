@@ -1,6 +1,58 @@
 (ns euler.p185
   (:use clojure.math.combinatorics))
 
+;;;;;;;;;;;;;;;;;;
+
+;;start på x i pos y, sjekk om kan være løsning:
+;; ja: neste index y + 1, repeat
+;; nei: hvis x == 9, gå tilbake y - 1, prøv x + 1 , dvs return 
+;;      ellers prøv x + 1
+;; detalj: pos kan utledes av lengden på seq
+
+(defn gyl [seq] 
+  (let [pre (apply str seq)]
+    pre
+    )
+  )
+
+(defn gyldig [val pos]
+  (or (and (= pos 0) (= val 4))
+      (and (= pos 1) (= val 6))))
+   
+(defn foor [sjekk]
+  (loop [val 0, pos 0, seq ()]
+  
+    (cond 
+      
+      (sjekk val pos) 
+      (do
+        (println "første " (list val pos seq))  
+        (recur 0 (inc pos) (cons val seq))
+        )
+      
+      (< val 10)
+      (do
+        (println "andre" (list val pos seq))
+        (recur (inc val) pos seq)
+        )
+      
+      :else seq
+      )))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(def small [
+            ["90342" 2]
+            ["70794" 0]
+            ["39458" 2]
+            ["34109" 1]
+            ["51545" 2]
+            ["12531" 1] 
+            ])
+
+(def fasit "39542")
+
 (def input [
             ["1748270476758276" 3]
             ["1841236454324589" 3]
@@ -26,8 +78,17 @@
             ["9742855507068353" 3]
             ])
 
+(defn gjett [x]
+  (map #(% 0) x))
+
+(defn for-pos-x [pos ls]
+  )
+
 (def verdier (map #(% 0) input))
 (def korrekte (map #(% 1) input))
+
+(defn snu [ls]
+  (map #(apply str %) (partition (count ls) (apply interleave ls))))
 
 (def snudd (map #(apply str %) (partition 22 (apply interleave verdier))))
 
@@ -58,19 +119,6 @@
 ;; Stopp permutering når minst ett tall gir flere treff enn max
 ;; Stopp permutering når summen av gjenværende antall treff i hver kolonne er større enn antall siffer som gjenstår
 ;; å permutere over. Må justeres for like tall i kolonner.
-
-;(def perm (clojure.math.combinatorics/selections (range 10) 3))
-
-;(def gjett {
-;            "90342" 2
-;            "70794" 0
-;            "39458" 2 
-;            "34109" 1 
-;            "51545" 2 
-;            "12531" 1 
-;            })
-
-;(def fasit "39542")
 
 ;; AVSKJÆRINGER:
 ;; permuter med mest frekvente tall først for å avskjære tidlig
