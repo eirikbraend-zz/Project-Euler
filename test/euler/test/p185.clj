@@ -3,7 +3,7 @@
   (:use clojure.test))
 
 
-(deftest tell
+(deftest antall-riktige-test
   (is (= 2 (antall-riktige "90342" "39542")))
   (is (= 0 (antall-riktige "70794" "39542")))
   (is (= 2 (antall-riktige "39458" "39542")))

@@ -1,7 +1,49 @@
 (ns euler.p185
   (:use clojure.math.combinatorics))
 
+
+(def fasit "39542")
+
+(def small [
+            ["90342" 2]
+            ["70794" 0]
+            ["39458" 2]
+            ["34109" 1]
+            ["51545" 2]
+            ["12531" 1] 
+            ])
+
+(def lista (map #(% 0) small))
+
+;;;;;;;;;;;;;;;;
+;; må ha flere avskjæringer:
+
+;; NB antall gjenværende kolonner sett mot antall manglende "riktige"
+;; NB må være sikker på at tallet finnes i kolonne!!
+;; NB Ikke glem sum pr rad også! (dvs ingen videre tall er riktige)
+; tell antall riktige i mottatt sekvens
+; hvor hver gjenværende kolonne: finn antall forekomster av vanligste tall
+; summer disse
+; hvis denne summen pluss antall riktige er større enn summen av "fasit" -ok, elles ingen løsning.
 ;;;;;;;;;;;;;;;;;;
+
+;; finn max antall riktige i "resten"
+;; strip n først tegn i "fasit". tell max i hver kol og summer)
+;; finn antall ritige på guess
+
+(defn antall-riktige [seq1 seq2]
+  (count (filter true? (map = (seq seq1) (seq seq2)))))
+
+(defn sjekk-antall [seq1 seq2 num] 
+  (- (antall-riktige seq1 seq2) num))
+
+(defn foo [guess sekvenser]
+  (map #(antall-riktige guess %) sekvenser)
+  )
+
+(defn sum-antall-riktige [guess sekvenser]
+  (reduce + (foo guess sekvenser)))
+
 
 ;;start på x i pos y, sjekk om kan være løsning:
 ;; ja: neste index y + 1, repeat
@@ -42,16 +84,32 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(def small [
-            ["90342" 2]
-            ["70794" 0]
-            ["39458" 2]
-            ["34109" 1]
-            ["51545" 2]
-            ["12531" 1] 
-            ])
 
-(def fasit "39542")
+;; gitt "small"
+;; when guess 9
+;; then
+;; sum-antall riktige = 1
+;; sum manglede tall = sum alle tall - 1 = 7
+;; rad 2 - 0 - 2
+;; rad 3 - 5 - 2
+;; rad 4 - 4 - 2
+;; rad 5 - 2 - 1
+;; sum = 7, ok, perm vidre.
+
+;; when guest "90"
+;; then sum-antall riktige = 3
+;; rad 3 - 5 - 2
+;; rad 4 - 4 - 2
+;; rad 5 - 2 - 1
+;; sum 5 -ok
+
+;; when guest "905"
+;; then sum-antall riktige = 5
+;; rad 4 - 4 - 2
+;; rad 5 - 2 - 1
+;; sum 5 -ok
+;; 90541 wtf=
+
 
 (def input [
             ["1748270476758276" 3]
@@ -77,53 +135,4 @@
             ["8690095851526254" 3]
             ["9742855507068353" 3]
             ])
-
-(defn gjett [x]
-  (map #(% 0) x))
-
-(defn for-pos-x [pos ls]
-  )
-
-(def verdier (map #(% 0) input))
-(def korrekte (map #(% 1) input))
-
-(defn snu [ls]
-  (map #(apply str %) (partition (count ls) (apply interleave ls))))
-
-(def snudd (map #(apply str %) (partition 22 (apply interleave verdier))))
-
-(def sort-snudd (map #(apply str (sort %)) snudd))
-
-(defn num-equals [a b]
-  (count (filter true? (map = a b))))
-
-(defn diff-to-expected [[value num] check]
-  (- (num-equals value check) num))
-
-(defn diff-to-exp-liste [x]
-  (map diff-to-expected input (repeat 22 x)))
-
-(defn exceed-expected [x]
-  (filter pos? (diff-to-exp-liste x)))
-
-
-;; permuter over alle tall
-;; for hvert element:
-   ;;
-   ;; nb! må ta hensyn til om tall i det hele tatt er gydlig??? nei, tas av max-treff sjekk
-
-;; finne sum av utestående nummer
-
-;; start med "" tom
-;; Ikke permuter over tall som ikke kan stå i kolonne
-;; Stopp permutering når minst ett tall gir flere treff enn max
-;; Stopp permutering når summen av gjenværende antall treff i hver kolonne er større enn antall siffer som gjenstår
-;; å permutere over. Må justeres for like tall i kolonner.
-
-;; AVSKJÆRINGER:
-;; permuter med mest frekvente tall først for å avskjære tidlig
-;; sjekk både begynnelse og slutt
-;; for slutt: når bare x plasser igjen og y riktige så langt, sammestill flere og avskjær.
-;; Ikke permuter over tall som IKKE kan være riktig, ref 0 riktige i raden.
-
 
