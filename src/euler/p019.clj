@@ -20,8 +20,11 @@
       (not (divisible? year 100))
       (divisible? year 400))))
 
+(defn month-dates [days]
+  (range 1 (inc days)))
+  
 (defn create-dates [year]
-  (concat 
+  (concat
     (month-dates 31)
     (month-dates (if (leap-year? year)
                    29
@@ -39,5 +42,13 @@
 
 (def century (mapcat create-dates (range 1901 2001)))
 
+(def foo (nthrest century 5))
+
+(def bar (take-nth 7 foo))
+(filter #(= 1 %) bar)
+(count (filter #(= 1 %) bar))
+;; 171
 
 
+
+;;36525
