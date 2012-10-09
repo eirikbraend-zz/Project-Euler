@@ -27,4 +27,6 @@
 
 (reducer input) 
 
+(def p067 (slurp "resources/p067-input.txt"))
+
 ;; 1074
