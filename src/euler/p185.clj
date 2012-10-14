@@ -1,7 +1,6 @@
 (ns euler.p185
   (:use clojure.math.combinatorics))
 
-
 (def fasit "39542")
 
 (def small [
@@ -13,7 +12,7 @@
             ["12531" 1] 
             ])
 
-(def lista (map #(% 0) small))
+(def lista (map first small))
 
 ;;;;;;;;;;;;;;;;
 ;; må ha flere avskjæringer:
@@ -31,8 +30,13 @@
 ;; strip n først tegn i "fasit". tell max i hver kol og summer)
 ;; finn antall ritige på guess
 
+;;;;;;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;
+
+
 (defn antall-riktige [seq1 seq2]
-  (count (filter true? (map = (seq seq1) (seq seq2)))))
+  (count (filter true? (map = (seq seq2) (seq seq1)))))
 
 (defn sjekk-antall [seq1 seq2 num] 
   (- (antall-riktige seq1 seq2) num))
@@ -44,46 +48,56 @@
 (defn sum-antall-riktige [guess sekvenser]
   (reduce + (foo guess sekvenser)))
 
+;;;;;;;;;;;
+(defn check-1 [data guess]
+  (list data guess))
 
-;;start på x i pos y, sjekk om kan være løsning:
-;; ja: neste index y + 1, repeat
-;; nei: hvis x == 9, gå tilbake y - 1, prøv x + 1 , dvs return 
-;;      ellers prøv x + 1
-;; detalj: pos kan utledes av lengden på seq
+(defn check-2 [data guess]
+  (repeat 2 data))
 
-(defn gyl [seq] 
-  (let [pre (apply str seq)]
-    pre
-    )
-  )
+(defn checks [data & checks]
+  (apply juxt (map #(partial % data) checks)))
 
-(defn gyldig [val pos]
-  (or (and (= pos 0) (= val 4))
-      (and (= pos 1) (= val 6))))
-   
-(defn foor [sjekk]
-  (loop [val 0, pos 0, seq ()]
-  
-    (cond 
-      
-      (sjekk val pos) 
-      (do
-        (println "første " (list val pos seq))  
-        (recur 0 (inc pos) (cons val seq))
-        )
-      
-      (< val 10)
-      (do
-        (println "andre" (list val pos seq))
-        (recur (inc val) pos seq)
-        )
-      
-      :else seq
+
+(def sjekkene (checks "123" check-1 check-2))
+
+;;;;;;;;;;;
+
+(defn generate [check, data]
+  (loop [value 0, position 0, solution ()]
+    (cond
+      (check value position data) (recur 0 (inc position) (cons value solution))
+      (< value 10) (recur (inc value) position solution)
+      :else (apply str (reverse solution))
       )))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn match? [input guess]
+  (every? true?
+          (map = 
+               (map (partial antall-riktige guess) (map first input))
+               (map second input))))
 
+(defn fasit? [input]
+  (map = ())
+  )
+
+
+(defn gen [check match]
+  (loop [candidate [0]]
+    (let [[fir & res] candidate]
+      (cond
+        (match (apply str (reverse candidate)))
+        candidate
+        (check candidate)
+        (do
+          (println "check:" candidate)
+          (recur (cons 0 candidate)))
+        (< fir 10)
+        (do
+          (println "< 10" candidate)
+          (recur (cons (inc fir) res)))
+        
+        :else candidate))))
 
 ;; gitt "small"
 ;; when guess 9
@@ -135,4 +149,3 @@
             ["8690095851526254" 3]
             ["9742855507068353" 3]
             ])
-
