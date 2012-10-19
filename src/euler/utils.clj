@@ -11,4 +11,4 @@
   (zero? (mod dividend divisor)))
 
 (defn factorial [n]
-  (reduce * (range 1 (inc n))))
+  (reduce #(* %1 (bigint %2)) (bigint 1) (range 1 (inc n))))
