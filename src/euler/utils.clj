@@ -9,3 +9,6 @@
 
 (defn divisible? [dividend divisor]
   (zero? (mod dividend divisor)))
+
+(defn factorial [n]
+  (reduce * (range 1 (inc n))))
