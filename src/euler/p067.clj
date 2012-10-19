@@ -1,18 +1,21 @@
 (ns euler.p067
   (:use [euler.utils :as util])
-  (:use [euler.p018 :as bar])
-  (:require [clojure.string :as str])
-  (:import [java.lang Integer]))
+  (:use [euler.p018 :as p018])
+  (:require [clojure.string :as str]))
 
-(def input3 (slurp "resources/p067-input.txt"))
+(def file "resources/p067-input.txt")
 
-(def splitted-lines (str/split-lines input3))
+(defn split-lines-by-space [n]
+  (map #(str/split % #" ") n))
 
-(defn split-line [line]
-  (str/split line #" "))
+(defn parse-lines-int [n]
+  (map #(map util/parse-int %) n))
 
-(def foo (map split-line splitted-lines))
-
-(def input2 (map #(map util/parse-int %) foo))
+(->> file 
+  slurp 
+  str/split-lines 
+  split-lines-by-space 
+  parse-lines-int 
+  p018/reducer)
 
 ;; 7273
