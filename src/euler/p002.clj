@@ -7,11 +7,11 @@
 ;; find the sum of the even-valued terms.
 
 (defn fibo [n]
-  (loop [n-2 1
-         n-1 2
+  (loop [n2 1
+         n1 2
          acc [1 2]]
-    (if (> n-2 n)
+    (if (> n2 n)
       acc
-      (recur n-1 (+ n-2 n-1) (conj acc (+ n-2 n-1))))))
+      (recur n1 (+ n2 n1) (conj acc (+ n2 n1))))))
 
 (reduce + (filter even? (drop-last 2 (fibo 4000000))))
