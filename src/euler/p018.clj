@@ -27,5 +27,4 @@
 
 (reducer input) 
 
-
 ;; 1074

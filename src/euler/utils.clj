@@ -6,3 +6,6 @@
 
 (defn parse-int [n]
   (. Integer parseInt n))
+
+(defn divisible? [dividend divisor]
+  (zero? (mod dividend divisor)))

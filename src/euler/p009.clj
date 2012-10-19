@@ -6,7 +6,13 @@
 
 
 (defn tall [n]
-  (for [a (range 1 n) b (range 1 n) c (range 1 n) :when (and (= (+ a b c) n) (< a b) (< b c) (= (+ (* a a) (* b b)) (* c c))) ] [a b c]))
+  (for [a (range 1 n) b (range 1 n) c (range 1 n) 
+        :when (and 
+                (= (+ a b c) n)
+                (< a b)
+                (< b c)
+                (= (+ (* a a) (* b b)) (* c c)))
+        ] [a b c]))
 
 (defn pytho? [[a b c]]
   (= (+ (* a a) (* b b)) (* c c)))
