@@ -5,7 +5,7 @@
 ;(Math/sqrt m)
 
 (defn parse-int [n]
-  (. Integer parseInt n))
+  (. Integer parseInt (clojure.string/trim n)))
 
 (defn divisible? [dividend divisor]
   (zero? (mod dividend divisor)))
