@@ -1,20 +1,6 @@
 (ns euler.p054
-  (:require [clojure.string :as str] [clojure.math.numeric-tower :as math]))
-
-;n the card game poker, a hand consists of five cards and are ranked, from lowest to highest, in the following way:
-;
-;High Card: Highest value card.
-;One Pair: Two cards of the same value.
-;Two Pairs: Two different pairs.
-;Three of a Kind: Three cards of the same value.
-;Straight: All cards are consecutive values.
-;Flush: All cards of the same suit.
-;Full House: Three of a kind and a pair.
-;Four of a Kind: Four cards of the same value.
-;Straight Flush: All cards are consecutive values of same suit.
-;Royal Flush: Ten, Jack, Queen, King, Ace, in same suit.
-;The cards are valued in the order:
-;2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, Ace.
+  (:require [clojure.string :as str]
+            [clojure.math.numeric-tower :as math]))
 
 (def input-file "resources/p054-input.txt")
 
@@ -32,13 +18,61 @@
 
 (def base 13)
 (def size-hand 5)
-(def weights (map math/expt (repeat size-hand base) (range 0 size-hand)))
+(def weights (vec (map #(math/expt base %) (range 0 20))))
 
-(defn sort-n-split [siffer] 
-  (sort-by count (partition-by identity (sort (seq siffer)))))
+(defn sortering [ranks]
+  (flatten (sort-by count (partition-by identity (sort ranks)))))
 
-(def tmp (take 5 (second transformed-input)))
-(sort-n-split (map first tmp))
+(defn rank-score [ranks]
+  (reduce + (map * (sortering ranks) weights)))
 
-;;(-> (sort-n-split en-lik) flatten)
+(def high-card-hand [[1 :D] [2 :H] [7 :S] [10 :H] [4 :S] ])
+(def pair-hand [[1 :H] [2 :H] [7 :H] [4 :H] [4 :S] ])
+(def two-pair-hand [[2 :H] [2 :D] [7 :H] [4 :H] [4 :S] ])
+(def three-kind-hand [ [2 :H] [4 :D] [7 :H] [4 :H] [4 :S] ])
+(def straight-hand [ [4 :H] [5 :S] [6 :D] [7 :H] [8 :S] ])
+(def flush-hand [[1 :H] [2 :H] [3 :H] [4 :H] [10 :H] ])
+(def house-hand [[3 :H] [2 :H] [3 :S] [3 :D] [2 :S] ])
+(def four-kind-hand [[3 :H] [3 :H] [3 :H] [3 :H] [2 :S] ])
+(def straight-flush-hand [[1 :H] [2 :H] [3 :H] [4 :H] [5 :H] ])
+
+(defn find-frequencies [values]
+  (-> values frequencies vals sort reverse))
+
+(def ranks-def [ [1]  [2]  [2 2] [3]  [1   ] [1]  [3 2] [4]  [1] ])
+(def suits-def [ [ ]  [ ]  [   ] [ ]  [    ] [5]  [   ] [ ]  [5] ])
+(def sum-def   [ true true true  true false  true true  true false])
+
+(defn check-sizes [definition actual]
+  (= (take (count definition) actual) (-> definition sort reverse)))
+
+(defn my-match [kind defi hand]
+  (let [freq (find-frequencies (map kind hand))]
+    (map #(check-sizes % freq) defi)))
+
+(defn is-straight? [ranks]
+  (= (- (reduce + ranks) (* (first (sort ranks)) 5)) 10))
+
+(defn my-straight [def ranks]
+  (let [yes (is-straight? ranks)]
+    (map #(or yes %) def)))
+
+(defn total-match [hand]
+  (let [rank-m (my-match first ranks-def hand)
+        suit-m (my-match second suits-def hand)
+        straight (my-straight sum-def (map first hand))]
+    (map #(and %1 %2 %3) rank-m suit-m straight)))
+
+(defn get-score-index [hand]
+  (apply max (keep-indexed #(if %2 %1 nil) (total-match hand))))
+
+(defn get-score [hand] 
+  (+ (weights (+ 5 (get-score-index hand))) (rank-score (map first hand))))
+
+(defn one-wins? [hands] 
+  (let [[one two] (partition 5 hands)]
+       (> (get-score one) (get-score two))))
+
+(defn count-one-wins [data]
+  (count (filter true? (map one-wins? data))))
 
