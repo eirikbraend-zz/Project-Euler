@@ -14,13 +14,6 @@
 ;; Give your answer in the form x,y with no spaces.
 
 
-;; "a"  "aRbFR"
-;; "b"  "LFaLb"
-
-
-;; "a"  "aRbFR"
-;; "b"  "LFaLb"
-
 (def start-term "Fa")
 (def a (seq "aRbFR"))
 (def b (seq "LFaLb"))
@@ -32,16 +25,11 @@
   (loop [idx 0, res (seq start-term)]
     (if (= idx n)
       (apply str res)
-      (recur (inc idx) (flatten (replace replace-map res))))))
+      (recur (inc idx) (take 2000 (flatten (replace replace-map res)))))))
 
-;;"FaRbFRRLFaLbFR"
-;; FaRbFRRLFaLbFR
-FaRbFRRLFaLbFRRLFaRbFRLLFaLbFR
+(defn position [s]
+    (loop [x 0, tmp (seq s)]
+      (if (empty? tmp)
+        x
+        (recur (inc x) (rest tmp)))))
 
-
-;; "a"  "aRbFR"
-;; "b"  "LFaLb"
-
-FaRbFRR     FRRLF     L     FRRLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFR
-FaRbFRRLFaLbFRRLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRRLFaRbFRLLFaLbFRLLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFR
-FaRbFRRLFaLbFRRLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRRLFaRbFRLLFaLbFRLLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRRLFaRbFRLLFaLbFRRLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFRLLFaRbFRRLFaLbFRRLFaRbFRLLFaLbFRLLFaRbFRRLFaLbFRLLFaRbFRLLFaLbFR
