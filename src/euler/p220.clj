@@ -27,9 +27,21 @@
       (apply str res)
       (recur (inc idx) (take 2000 (flatten (replace replace-map res)))))))
 
-(defn position [s]
-    (loop [x 0, tmp (seq s)]
-      (if (empty? tmp)
-        x
-        (recur (inc x) (rest tmp)))))
+;(reduce path seed a)
+;; NB only count F as steps!!
+;; must increase/calculate length of dragon
 
+(def r-turn {:N :E, :E :S, :S :W, :W :N})
+(def l-turn {:N :W, :E :N, :S :E, :W, :S})
+(def f-step {:N [1, 0], :E [0, 1], :S [-1, 0], :W [0, -1]})
+(def seed {:coord [0 0], :dir :N})
+
+(defn path [p n]
+  (cond 
+   (= n \R) (assoc p :dir (r-turn (p :dir)))
+   (= n \L) (assoc p :dir (l-turn (p :dir)))
+   (= n \F) (assoc p :coord (map + (p :coord) (f-step (p :dir))))
+   :else p
+   ))
+
+;; reduce: x, y, dir
