@@ -1,5 +1,7 @@
 (ns euler.p220)
 
+;; Heighway Dragon
+
 ;; Let D0 be the two-letter string "Fa". For n1, derive Dn from Dn-1 by the string-rewriting rules:
 
 ;; "a"  "aRbFR"
@@ -30,6 +32,7 @@
 ;(reduce path seed a)
 ;; NB only count F as steps!!
 ;; must increase/calculate length of dragon
+;; also use reduce to "get" dragon??
 
 (def r-turn {:N :E, :E :S, :S :W, :W :N})
 (def l-turn {:N :W, :E :N, :S :E, :W, :S})
@@ -44,4 +47,3 @@
    :else p
    ))
 
-;; reduce: x, y, dir
