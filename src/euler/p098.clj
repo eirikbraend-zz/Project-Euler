@@ -49,3 +49,4 @@
 ;; check if square
 
 ;; start with care/race
+;;    (filter #(> ( count %) 1) same-chars)))
