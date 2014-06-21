@@ -12,6 +12,9 @@
             ["12531" 1] 
             ])
 
+(def colums (apply map vector (map seq (map first small))))
+
+
 (def lista (map first small))
 
 ;;;;;;;;;;;;;;;;
