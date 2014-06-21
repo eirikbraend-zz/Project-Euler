@@ -10,4 +10,5 @@ pom.xml
 .project
 target
 .nrepl-port
+.lein-repl-history
 *~
